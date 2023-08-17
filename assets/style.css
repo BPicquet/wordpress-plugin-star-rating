@@ -8,6 +8,7 @@
   .comments-rating label {
     display: inline-block;
   }
+
   .rating-container {
     font-size: 0;
     display: flex;
@@ -15,15 +16,19 @@
     flex-direction: row-reverse;
     gap: 0 5px;
   }
+
   .rating-container * {
     font-size: 1.4rem;
   }
+
   .rating-container > input {
     display: none;
   }
+
   .comments-rating > .rating-container > label {
     font-size: 20px !important;
   }
+
   .rating-container > input + label {
     /* only enough room for the star */
     font-family: 'dashicons';
@@ -35,12 +40,14 @@
     cursor: pointer;
     margin: 0;
   }
+
   .rating-container > input + label:before {
     display: inline-block;
     text-indent: -9999px;
     content: "\f154";
     color: #888;
   }
+
   .rating-container > input:checked ~ label:before,
   .rating-container > input + label:hover ~ label:before,
   .rating-container > input + label:hover:before {
@@ -48,28 +55,68 @@
     color: #FFAA17;
     text-shadow: 0 0 1px #333;
   }
+
   .rating-container > .star-cb-clear + label {
     text-indent: -9999px;
     width: .5em;
     margin-left: -.5em;
   }
+  
   .rating-container > .star-cb-clear + label:before {
     width: .5em;
   }
+
   .rating-container:hover > input + label:before {
     content: "\f154";
     color: #888;
     text-shadow: none;
   }
+
   .rating-container:hover > input + label:hover ~ label:before,
   .rating-container:hover > input + label:hover:before {
     content: "\f155";
     color: #FFAA17;
     text-shadow: 0 0 1px #333;
   }
+
   .comment-respond .rating-container > .star-cb-clear + label, .comment-respond .rating-container > input + label:before {
     text-indent: 9999px;
   }
+
   .comment-respond .rating-container > input + label {
     text-indent: -9999px;
   }
+
+/* Average Rating */
+.average-rating {
+  display: flex;
+  align-items: center;
+}
+
+.average-rating > p:first-child {
+  margin: 3px 5px 0 0;
+  font-size: 10px;
+  color: #FFAA17;
+  text-decoration: underline;
+}
+
+.average-rating > span {
+  color: #FFAA17;
+}
+
+.average-rating > span:last-child {
+  margin: 0 5px 0 0;
+}
+
+.average-rating > p:last-child {
+  margin: 0;
+  font-size: 12px;
+  color: #FFAA17;
+}
+
+  /* In Meeple Island, sur les cards, la taille est de 14px */
+.games-card .dashicons, .games-card .dashicons-before:before {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+}

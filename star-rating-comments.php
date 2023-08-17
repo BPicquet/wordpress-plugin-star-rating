@@ -96,6 +96,7 @@ function restrict_one_comment_per_email($commentdata) {
 
 
 //Display the rating on a submitted comment.
+
 /* add_filter( 'comment_text', 'wpp_comment_rating_display_rating' ); */
 add_shortcode( 'comment_rating_displaying', 'wpp_comment_rating_display_rating' );
 
@@ -125,3 +126,84 @@ function wpp_comment_rating_display_rating( $comment_text ){
         
     }
 }
+
+
+//Get the average rating of a post.
+
+function wpp_comment_rating_get_average_ratings( $id ) {
+    $comments = get_approved_comments( $id );
+
+    if ( $comments ) {
+        $i = 0;
+        $total = 0;
+
+        foreach( $comments as $comment ){
+            $rate = get_comment_meta( $comment->comment_ID, 'rating', true );
+
+            if( isset( $rate ) && '' !== $rate ) {
+                $i++;
+                $total += $rate;
+            }
+
+  
+        }
+
+        if ( 0 === $i ) {
+            return false;
+        } else {
+            return array(
+                'average' => round( $total / $i, 1 ),
+                'total'   => count($comments),
+            );
+        }
+
+    } else {
+        return false;
+    }
+
+}
+
+//Display the average rating above the content.
+/* add_filter( 'the_content', 'wpp_comment_rating_display_average_rating' ); */
+add_shortcode( 'comment_displaying_average_rating', 'wpp_comment_rating_display_average_rating' );
+
+function wpp_comment_rating_display_average_rating( $content ) {
+    global $post;
+
+    if ( false === wpp_comment_rating_get_average_ratings( $post->ID ) ) {
+      return $content;
+    }
+    
+    $stars                = '';
+    $averageAndTotalArray = wpp_comment_rating_get_average_ratings( $post->ID );
+    $average              = $averageAndTotalArray['average'];
+    $totalComments        = $averageAndTotalArray['total'];
+    /* If it's in single page the width of span between the star it's 20px and others it's 14px */
+    $sizeOfStar           = ( is_single() ? 20 : 14 );
+
+    for ( $i = 1; $i <= $average + 1; $i++ ) {
+        $width = intval( $i - $average > 0 ? $sizeOfStar  - ( ( $i - $average ) * $sizeOfStar  ) : $sizeOfStar  );
+
+        if ( 0 === $width ) {
+            continue;
+        }
+        $stars .= '<span style="overflow:hidden; width:' . $width . 'px;" class="dashicons dashicons-star-filled"></span>';
+
+        if ( $i - $average > 0 ) {
+            $stars .= '<span style="overflow:hidden; position:relative; left:-' . $width .'px;" class="dashicons dashicons-star-empty"></span>';
+        }
+    }
+
+    if ( $average < 5 ) {
+        for ( $i = round($average); $i < 5; $i++ ) {
+            $stars .= '<span style="overflow:hidden; position:relative; left:-' . $width .'px;" class="dashicons dashicons-star-empty"></span>';
+        }
+    }
+
+
+    
+    $custom_content  = '<div class="average-rating"><p>' . $average . '/5</p>' . $stars . '</div>';
+    $custom_content .= $content;
+
+    return $custom_content;
+  }
